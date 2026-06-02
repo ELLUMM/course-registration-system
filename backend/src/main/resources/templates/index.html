@@ -87,6 +87,34 @@
             transform: translateY(0);
             box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
         }
+
+        /* 로그아웃 영역 */
+        .logout-form {
+            margin-top: 25px;
+        }
+
+        /* 로그아웃 버튼 */
+        .logout-button {
+            width: 100%;
+            border: none;
+            background-color: #95a5a6;
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .logout-button:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -100,6 +128,10 @@
             <li><a href="/courses">📚 강의 관리</a></li>
             <li><a href="/enrollments">📝 수강신청 관리</a></li>
         </ul>
+
+        <form action="/logout" method="post" class="logout-form">
+            <button type="submit" class="logout-button">로그아웃</button>
+        </form>
     </div>
 
 </body>
