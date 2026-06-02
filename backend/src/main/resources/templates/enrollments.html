@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강신청 관리 - 수강신청 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 전체 기본 배경 및 폰트 설정 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 메인 컨테이너 (카드 스타일) */
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* 제목 스타일 */
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 4px solid #3498db;
+            padding-left: 12px;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        /* 에러 메시지 상자 스타일 */
+        .error-message {
+            background-color: #fde8e8;
+            color: #e74c3c;
+            border: 1px solid #f8b4b4;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* 폼(Form) 공통 블록 스타일 */
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        /* 수강신청 양식 세로 정렬 구조 */
+        .enroll-form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .enroll-form-group:last-of-type {
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #7f8c8d;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* 검색/조회 폼 가로 한 줄 스타일 */
+        .search-inline-form {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-inline-form select {
+            flex: 1;
+        }
+
+        /* 입력 폼 요소 공통 스타일 */
+        select {
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* 조회된 개수 안내 텍스트 */
+        .count-info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            background-color: #e8f4fd;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .count-info strong {
+            color: #3498db;
+            font-size: 16px;
+        }
+
+        /* 버튼 기본 스타일 */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-block {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+        }
+
+        /* 취소 버튼 스타일 (빨간색) */
+        .btn-danger {
+            background-color: #e74c3c;
+            color: #ffffff;
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ecf0f1;
+            margin: 40px 0;
+        }
+
+        /* 테이블(Table) 스타일 */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 0 1px #ecf0f1;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        td {
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background-color: #f4f7f6;
+        }
+
+        /* 하단 이동 버튼 */
+        .btn-back {
+            background-color: #95a5a6;
+            color: #ffffff;
+            margin-top: 30px;
+        }
+
+        .btn-back:hover {
+            background-color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>수강신청 관리</h1>
+
+        <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}">
+            ⚠️ 에러 메시지 내용이 출력되는 곳입니다.
+        </p>
+
+        <h2>🔍 학생별 수강신청 내역 조회</h2>
+        <div class="form-container">
+            <form action="/enrollments" method="get" class="search-inline-form">
+                <label>학생 선택</label>
+                <select name="studentId">
+                    <option value="">전체 학생 보기</option>
+                    <option th:each="student : ${students}"
+                            th:value="${student.id}"
+                            th:text="${student.name + ' (' + student.studentNumber + ')'}"
+                            th:selected="${student.id == selectedStudentId}">
+                        김민경 (202401459)
+                    </option>
+                </select>
+                <button type="submit" class="btn btn-primary">조회하기</button>
+            </form>
+        </div>
+
+        <div class="count-info">
+            조회된 수강신청 수: <strong th:text="${#lists.size(enrollments)}">0</strong>건
+        </div>
+
+        <h2>📋 수강신청 내역 목록</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>학생</th>
+                        <th>학번</th>
+                        <th>강의명</th>
+                        <th>교수명</th>
+                        <th>요일</th>
+                        <th>시간</th>
+                        <th>신청일</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="enrollment : ${enrollments}">
+                        <td th:text="${enrollment.id}">1</td>
+                        <td th:text="${enrollment.student.name}">김민경</td>
+                        <td th:text="${enrollment.student.studentNumber}">202401459</td>
+                        <td th:text="${enrollment.course.courseName}">테스트 강의</td>
+                        <td th:text="${enrollment.course.professor}">테스트 교수</td>
+                        <td th:text="${enrollment.course.dayOfWeek}">TUESDAY</td>
+                        <td th:text="${enrollment.course.startTime + ' ~ ' + enrollment.course.endTime}">
+                            21:30 ~ 22:30
+                        </td>
+                        <td th:text="${enrollment.enrolledAt}">2026-06-02</td>
+                        <td>
+                            <form action="/enrollments/cancel" method="post" style="margin:0;">
+                                <input type="hidden" name="studentId" th:value="${enrollment.student.id}">
+                                <input type="hidden" name="courseId" th:value="${enrollment.course.id}">
+                                <button type="submit" class="btn btn-danger">신청 취소</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <h2>📝 신규 수강신청</h2>
+        <div class="form-container">
+            <form action="/enrollments" method="post">
+                <div class="enroll-form-group">
+                    <label>학생 선택</label>
+                    <select name="studentId" required>
+                        <option value="">수강신청할 학생을 선택하세요</option>
+                        <option th:each="student : ${students}"
+                                th:value="${student.id}"
+                                th:text="${student.name + ' (' + student.studentNumber + ')'}">
+                            김민경 (202401459)
+                        </option>
+                    </select>
+                </div>
+
+                <div class="enroll-form-group">
+                    <label>강의 선택</label>
+                    <select name="courseId" required>
+                        <option value="">신청할 강의를 선택하세요</option>
+                        <option th:each="course : ${courses}"
+                                th:value="${course.id}"
+                                th:text="${course.courseName + ' / ' + course.professor + ' / ' + course.dayOfWeek + ' ' + course.startTime + '~' + course.endTime + ' / ' + course.enrolledCount + '/' + course.capacity}">
+                            테스트 강의 / 테스트 교수 / TUESDAY 21:30~22:30 / 1/10
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">수강신청 완료</button>
+            </form>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/" class="btn btn-back">⬅ 메인으로 돌아가기</a>
+        </div>
+    </div>
+
+</body>
+</html>

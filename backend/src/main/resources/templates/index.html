@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강신청 관리 시스템</title>
+    <!-- 구글 폰트 적용 (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 전체 기본 배경 및 폰트 설정 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* 메인 컨테이너 (카드 스타일) */
+        .container {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* 제목 스타일 */
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        /* 부제목/설명 텍스트 */
+        p.subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* 리스트 스타일 제거 */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            margin-bottom: 15px;
+        }
+
+        ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 메뉴 버튼 스타일 */
+        ul li a {
+            display: block;
+            background-color: #3498db;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+        }
+
+        /* 메뉴 버튼 호버(마우스 올렸을 때) 효과 */
+        ul li a:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* 메뉴 버튼 클릭 효과 */
+        ul li a:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>수강신청 관리 시스템</h1>
+        <p class="subtitle">원하시는 메뉴를 선택해 주세요.</p>
+
+        <ul>
+            <li><a href="/students">👤 학생 관리</a></li>
+            <li><a href="/courses">📚 강의 관리</a></li>
+            <li><a href="/enrollments">📝 수강신청 관리</a></li>
+        </ul>
+    </div>
+
+</body>
+</html>

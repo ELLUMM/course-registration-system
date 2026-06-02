@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 관리 - 수강신청 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 전체 기본 배경 및 폰트 설정 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 메인 컨테이너 (카드 스타일) */
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 1000px; /* 테이블이 넓으므로 가로폭을 조금 늘렸습니다 */
+        }
+
+        /* 제목 스타일 */
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 4px solid #3498db;
+            padding-left: 12px;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        /* 폼(Form) 공통 블록 스타일 */
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        /* 강의 등록 폼 배치 (그리드) */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #7f8c8d;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* 입력 폼 요소 공통 스타일 (input, select) */
+        input[type="text"],
+        input[type="number"],
+        input[type="time"],
+        select {
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* 버튼 기본 스타일 */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-block {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+        }
+
+        /* 검색 폼 스타일 */
+        .search-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ecf0f1;
+            margin: 40px 0;
+        }
+
+        /* 테이블(Table) 스타일 */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto; /* 화면이 작아지면 가로 스크롤 생성 */
+            border-radius: 12px;
+            box-shadow: 0 0 0 1px #ecf0f1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        td {
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background-color: #f4f7f6;
+        }
+
+        /* 하단 이동 버튼 */
+        .btn-back {
+            background-color: #95a5a6;
+            color: #ffffff;
+            margin-top: 30px;
+        }
+
+        .btn-back:hover {
+            background-color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>강의 관리</h1>
+
+        <h2>📚 강의 등록</h2>
+        <div class="form-container">
+            <form action="/courses" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>강의명</label>
+                        <input type="text" name="courseName" placeholder="예: 데이터베이스" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>교수명</label>
+                        <input type="text" name="professor" placeholder="예: 박기석" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>정원</label>
+                        <input type="number" name="capacity" min="1" placeholder="예: 30" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>요일</label>
+                        <select name="dayOfWeek" required>
+                            <option value="MONDAY">월요일</option>
+                            <option value="TUESDAY">화요일</option>
+                            <option value="WEDNESDAY">수요일</option>
+                            <option value="THURSDAY">목요일</option>
+                            <option value="FRIDAY">금요일</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>시작 시간</label>
+                        <input type="time" name="startTime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>종료 시간</label>
+                        <input type="time" name="endTime" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">강의 등록하기</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <h2>🔍 강의 검색</h2>
+        <div class="form-container">
+            <form action="/courses" method="get" class="search-form">
+                <input type="text" name="keyword" class="search-input" placeholder="강의명 또는 교수명 검색" th:value="${keyword}">
+                <button type="submit" class="btn btn-primary">검색</button>
+                <a href="/courses" class="btn btn-secondary">전체 보기</a>
+            </form>
+        </div>
+
+        <hr>
+
+        <h2>📋 강의 목록</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>강의명</th>
+                        <th>교수명</th>
+                        <th>정원</th>
+                        <th>현재 신청 인원</th>
+                        <th>요일</th>
+                        <th>시작 시간</th>
+                        <th>종료 시간</th>
+                        <th>등록일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="course : ${courses}">
+                        <td th:text="${course.id}">1</td>
+                        <td th:text="${course.courseName}">운영체제</td>
+                        <td th:text="${course.professor}">이승수</td>
+                        <td th:text="${course.capacity}">30</td>
+                        <td th:text="${course.enrolledCount}">0</td>
+                        <td th:text="${course.dayOfWeek}">MONDAY</td>
+                        <td th:text="${course.startTime}">09:00</td>
+                        <td th:text="${course.endTime}">10:30</td>
+                        <td th:text="${course.createdAt}">2026-06-02</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/" class="btn btn-back">⬅ 메인으로 돌아가기</a>
+        </div>
+    </div>
+
+</body>
+</html>
